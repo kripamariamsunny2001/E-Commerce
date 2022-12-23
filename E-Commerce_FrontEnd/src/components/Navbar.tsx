@@ -10,8 +10,26 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import {blueGrey} from '@mui/material/colors'
-import { Divider } from 'material-ui';
+import { Divider } from '@mui/material';
 import { Button, MenuList } from '@mui/material';
+import Modal from '@mui/material/Modal';
+import GoogleLogin from 'react-google-login';
+const responseGoogle = (response: any) => {
+  console.log(response);
+}
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  height: 200,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -23,6 +41,9 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 //testing for github
   return (
     <AppBar position="static" sx={{bgcolor:blueGrey[500]}}>
@@ -54,13 +75,30 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
 
-              
               <MenuItem onClick={handleCloseUserMenu}>
               <MenuList>
               <Typography><Button>My Profile</Button></Typography>
               <Typography><Button>Wishlist</Button></Typography>
               <Typography><Button>Cart</Button><Divider /></Typography>
-              <Typography><Button>Login</Button></Typography>
+              
+              <Button onClick={handleOpen}>Login</Button>
+              <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+              >
+              <Box sx={style}>
+              
+              <GoogleLogin
+              clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+              buttonText="LOGIN WITH GOOGLE"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              cookiePolicy={'single_host_origin'}
+              />
+              </Box>
+              </Modal>
               <Typography><Button>Logout</Button></Typography>
               </MenuList>
               </MenuItem>
