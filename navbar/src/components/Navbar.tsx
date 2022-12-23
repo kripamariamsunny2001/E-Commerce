@@ -10,8 +10,8 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import {blueGrey} from '@mui/material/colors'
-
-const settings = ['My Profile', 'Wishlist', 'Cart', 'Login', 'Logout'];
+import { Divider } from 'material-ui';
+import { Button, MenuList } from '@mui/material';
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -53,11 +53,15 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleCloseUserMenu}>
+              <MenuList>
+              <Typography><Button>My Profile</Button></Typography>
+              <Typography><Button>Wishlist</Button></Typography>
+              <Typography><Button>Cart</Button><Divider /></Typography>
+              <Typography><Button>Login</Button></Typography>
+              <Typography><Button>Logout</Button></Typography>
+              </MenuList>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
