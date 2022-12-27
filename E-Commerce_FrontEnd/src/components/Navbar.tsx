@@ -91,7 +91,7 @@ function Navbar() {
               <Box sx={style}>
               
               <GoogleLogin
-              clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+              clientId="184201280941-cj1icjestuqklfpa308iv9r2128fgt1v.apps.googleusercontent.com"
               buttonText="LOGIN WITH GOOGLE"
               onSuccess={responseGoogle}
               onFailure={responseGoogle}
