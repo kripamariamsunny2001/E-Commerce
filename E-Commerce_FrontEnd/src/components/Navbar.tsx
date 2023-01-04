@@ -13,7 +13,14 @@ import {blueGrey} from '@mui/material/colors'
 import { Divider } from '@mui/material';
 import { Button, MenuList } from '@mui/material';
 import Modal from '@mui/material/Modal';
-import GoogleLogin from 'react-google-login';
+import { GoogleLogin } from '@react-oauth/google';
+import SearchIcon from '@mui/icons-material/Search';
+import WorkSharpIcon from '@mui/icons-material/WorkSharp';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import jwt_decode from "jwt-decode";
+import { useState } from "react";
+import { googleLogout } from "@react-oauth/google";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 const responseGoogle = (response: any) => {
   console.log(response);
 }
@@ -33,6 +40,8 @@ const style = {
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [isLoggedin, setisLoggedin] = useState(false)
+  const [product, setProductList] = useState([{}]);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -41,6 +50,13 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const logoutHandler = () => {
+    googleLogout();
+    console.log("Logout Succesful");
+
+  };
+
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -53,9 +69,33 @@ function Navbar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
+          <IconButton sx={{ p: 2 }}>
+          <SearchIcon />
+
+</IconButton>
+<IconButton sx={{ p: 2 }}>
+  <FavoriteIcon />
+</IconButton>
+<IconButton sx={{ p: 2 }}>
+  <WorkSharpIcon />
+</IconButton>
+<IconButton>
+   <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    label="Sorting"
+    
+  >
+    <MenuItem value={10}>From A-Z</MenuItem>
+    <MenuItem value={20}>From Z-A</MenuItem>
+    <MenuItem value={30}>From Higher to Lower</MenuItem>
+    <MenuItem value={30}>From Lower to Higher</MenuItem>
+  </Select>
+      </IconButton>
             <Tooltip title="Open settings">
+            
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar />
+                <Avatar src="https://lh3.googleusercontent.com/a/AEdFTp5V--9zDVtfnT4DfPU5umgVW1EsN6JZfJ8Bv_sb=s96-c"/>
               </IconButton>
             </Tooltip>
             <Menu
@@ -91,20 +131,26 @@ function Navbar() {
               <Box sx={style}>
               
               <GoogleLogin
-              clientId="184201280941-cj1icjestuqklfpa308iv9r2128fgt1v.apps.googleusercontent.com"
-              buttonText="LOGIN WITH GOOGLE"
-              onSuccess={responseGoogle}
-              onFailure={responseGoogle}
-              cookiePolicy={'single_host_origin'}
-              />
+              onSuccess={credentialResponse => {
+                console.log(credentialResponse.credential);
+                if(credentialResponse.credential!== undefined){
+                var decoded = jwt_decode(credentialResponse.credential);
+                console.log(decoded)
+                }
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+            /> 
               </Box>
               </Modal>
-              <Typography><Button>Logout</Button></Typography>
+              <Typography><Button onClick={logoutHandler}>Logout</Button></Typography>
               </MenuList>
               </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
+              
       </Container>
     </AppBar>
   );
