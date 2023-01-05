@@ -14,31 +14,49 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Container from "@mui/material/Container";
 import Autocomplete from "@mui/material/Autocomplete";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import SortIcon from "@mui/icons-material/Sort";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { Button } from "@mui/material";
 import { TextField } from "@material-ui/core";
 
-const HomePage = () => {
+const Home = () => {
   const [product, setProductList] = useState([{}]);
   const [selectedName, setSelected] = useState([]);
   const [minAmount, setMinAmount] = useState<number>(0);
   const [maxAmount, setMaxAmount] = useState<number>(0);
   const [filterStatus, setFilterStatus] = React.useState(false);
+  const [sortStatus, setSortStatus] = React.useState(false);
+  let [sortAmount, setSortAmount] = useState<number>(0);
 
   //fetch to list products, filter prodcts using name , minimum amount and maximum amount
+
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/reviews/product/", {
-        headers: {
-          productName: selectedName,
-          minAmount: minAmount,
-          maxAmount: maxAmount,
-        },
-      })
+      .get(
+        `http://127.0.0.1:8000/reviews/product/?productName=${selectedName}&minAmount=${minAmount}&maxAmount=${maxAmount}&sortAmount=${sortAmount}`
+      )
+
       .then((res) => {
         console.log(res.data);
         setProductList(res.data);
       });
-  }, [selectedName, maxAmount, minAmount]);
+  }, [selectedName, maxAmount, minAmount, sortAmount]);
+
+  const handleSort = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setSortAmount((sortAmount = 1));
+  };
+  const changeSort = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setSortAmount((sortAmount = -1));
+  };
+
+  const handleChange = (value: any) => {
+    if (value != null) {
+      setSelected(value);
+    } else {
+      setSelected([]);
+    }
+  };
+
   return (
     <div>
       <IconButton
@@ -48,18 +66,20 @@ const HomePage = () => {
       >
         <FilterAltIcon />
       </IconButton>
+
       {filterStatus && (
         <Container>
           <Autocomplete
             disablePortal
             id="combo-box-demo"
             options={product.map((item: any) => item.productName)}
-            onChange={(event, value) => setSelected(value)}
+            onChange={(event, value) => handleChange(value)}
             sx={{ width: 200 }}
             renderInput={(params) => (
               <TextField {...params} label="Filter By Name" />
             )}
           />
+
           <TextField
             type="number"
             label="Min"
@@ -76,7 +96,28 @@ const HomePage = () => {
               setMaxAmount(Number(event.target.value))
             }
           />
-          <Button style={{ backgroundColor: "#21b6ae" }}>Apply Filter</Button>
+
+          <Button>Apply Filter</Button>
+        </Container>
+      )}
+
+      <IconButton
+        onClick={() => {
+          setSortStatus(!sortStatus);
+        }}
+      >
+        <SortIcon />
+      </IconButton>
+
+      {sortStatus && (
+        <Container>
+          <Button variant="outlined" onClick={handleSort}>
+            Minimum to Maximum
+          </Button>
+          
+          <Button variant="outlined" onClick={changeSort}>
+            Maximum to Minimum
+          </Button>
         </Container>
       )}
       <ImageList>
@@ -117,4 +158,4 @@ const HomePage = () => {
     </div>
   );
 };
-export default HomePage;
+export default Home;

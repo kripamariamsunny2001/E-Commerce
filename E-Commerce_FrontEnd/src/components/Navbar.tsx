@@ -21,6 +21,7 @@ import jwt_decode from "jwt-decode";
 import { useState } from "react";
 import { googleLogout } from "@react-oauth/google";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { useNavigate } from 'react-router-dom';
 const responseGoogle = (response: any) => {
   console.log(response);
 }
@@ -37,6 +38,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -60,6 +62,12 @@ function Navbar() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const navigate = useNavigate();
+  const handleProfile = () => {
+
+    navigate('/MyProfile')
+  }
 //testing for github
   return (
     <AppBar position="static" sx={{bgcolor:blueGrey[500]}}>
@@ -79,19 +87,7 @@ function Navbar() {
 <IconButton sx={{ p: 2 }}>
   <WorkSharpIcon />
 </IconButton>
-<IconButton>
-   <Select
-    labelId="demo-simple-select-label"
-    id="demo-simple-select"
-    label="Sorting"
-    
-  >
-    <MenuItem value={10}>From A-Z</MenuItem>
-    <MenuItem value={20}>From Z-A</MenuItem>
-    <MenuItem value={30}>From Higher to Lower</MenuItem>
-    <MenuItem value={30}>From Lower to Higher</MenuItem>
-  </Select>
-      </IconButton>
+
             <Tooltip title="Open settings">
             
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -117,7 +113,7 @@ function Navbar() {
 
               <MenuItem onClick={handleCloseUserMenu}>
               <MenuList>
-              <Typography><Button>My Profile</Button></Typography>
+              <Typography><Button onClick={handleProfile} className="button" name="My profile">My Profile</Button></Typography>
               <Typography><Button>Wishlist</Button></Typography>
               <Typography><Button>Cart</Button><Divider /></Typography>
               
